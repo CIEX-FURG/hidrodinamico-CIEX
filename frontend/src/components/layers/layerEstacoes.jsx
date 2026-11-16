@@ -12,7 +12,7 @@ const STATIONS = [
   { id: 6, nome: "Tavares", latitude: -31.28002, longitude: -51.15804 },
   { id: 7, nome: "Pelotas", latitude: -31.764725, longitude: -52.226296},
   { id: 8, nome: "Mostardas", latitude: -31.020614, longitude: -50.967112},
-  // { id: 9, nome: "Colônia Z3", latitude: -31.702306, longitude: -52.156611},
+  { id: 9, nome: "Colônia Z3", latitude: -31.702306, longitude: -52.156611},
   { id: 10, nome: "Viamão (Reserva Estadual)", latitude: -30.358806, longitude: -51.046306},
   { id: 11, nome: "Viamão (Itapuã)", latitude: -30.282613, longitude: -51.021316},
   { id: 12, nome: "Saco da Mangueira", latitude: -32.050917, longitude: -52.109917},
