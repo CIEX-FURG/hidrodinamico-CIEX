@@ -20,6 +20,11 @@ import { useTheme } from "@mui/material/styles";
 // CONSTANTES / MAPAS DE CONFIGURAÇÃO DAS ESTAÇÕES
 // =====================================================================
 
+// Exibição dos dados HidroSens/UFPel na estação 7 (Pelotas).
+// TEMPORARIAMENTE DESATIVADO — mude para true para reativar.
+const HIDROSENS_ATIVO = false;
+const usaHidrosens = (id) => HIDROSENS_ATIVO && id === 7;
+
 // Nome do sensor (usado para montar os paths dos arquivos JSON) por ID de estação
 const SENSOR_POR_ID = {
   1: "FURG_CCMAR",
@@ -344,7 +349,7 @@ const ChartNivel = forwardRef(function ChartNivel(
         .then((res) => res.json())
         .catch(() => ({})),
       // Somente a estação 7 utiliza o HidroSens/UFPel
-      estacaoSelecionada.id === 7
+      usaHidrosens(estacaoSelecionada.id)
         ? fetch(`/data/observado_sensor_Laranjal_Hidrosens.json`)
             .then((res) => res.json())
             .catch(() => [])
@@ -402,7 +407,7 @@ const ChartNivel = forwardRef(function ChartNivel(
         });
 
         // --- Insere os pontos observados via HidroSens/UFPel (exclusivo estação 7) ---
-        if (estacaoSelecionada.id === 7) {
+        if (usaHidrosens(estacaoSelecionada.id)) {
           jsonHidrosens.forEach((item) => {
             const ts = obterTimestamp(item.data);
             if (!ts) return;
@@ -741,7 +746,7 @@ const ChartNivel = forwardRef(function ChartNivel(
                     color: isDefesaCivil ? "#F9A825" : "#ff7300",
                     shape: "circle",
                   },
-                  ...(estacaoSelecionada.id === 7
+                  ...(usaHidrosens(estacaoSelecionada.id)
                     ? [{ label: "Observado - HidroSens UFPel", color: "#7B1FA2", shape: "circle" }]
                     : []),
                   ...(erroMedio !== null
@@ -812,7 +817,7 @@ const ChartNivel = forwardRef(function ChartNivel(
             />
 
             {/* Linha: observado HidroSens/UFPel (exclusiva da estação 7) */}
-            {estacaoSelecionada.id === 7 && (
+            {usaHidrosens(estacaoSelecionada.id) && (
               <Line
                 type="monotone"
                 dataKey="observadoHidrosens"

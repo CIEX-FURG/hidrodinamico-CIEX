@@ -54,8 +54,35 @@ function TituloSecao({ children }) {
 
 /* ==================== TABELA ==================== */
 
+// Tolerância para casar observado com previsto: sensores da Defesa Civil registram
+// com alguns segundos de desvio (ex.: 00:59:50, 01:00:05), então não há igualdade exata
+const TOLERANCIA_OBSERVADO_MS = 15 * 60 * 1000;
+
+// Para cada horário previsto, usa o observado mais próximo dentro da tolerância
+function casarObservado(dados) {
+  const observados = dados.filter((d) => temValor(d.observado));
+  let j = 0;
+  return dados
+    .filter((d) => temValor(d.previsao))
+    .map((d) => {
+      // dados vêm ordenados por timestamp: avança o ponteiro até o vizinho mais próximo
+      while (
+        j + 1 < observados.length &&
+        Math.abs(observados[j + 1].timestamp - d.timestamp) <= Math.abs(observados[j].timestamp - d.timestamp)
+      ) {
+        j++;
+      }
+      const maisProximo = observados[j];
+      const observado =
+        maisProximo && Math.abs(maisProximo.timestamp - d.timestamp) <= TOLERANCIA_OBSERVADO_MS
+          ? maisProximo.observado
+          : null;
+      return { ...d, observado };
+    });
+}
+
 function TabelaNivel({ dados }) {
-  const linhas = dados.filter((d) => temValor(d.previsao));
+  const linhas = casarObservado(dados);
 
   if (!linhas.length) return null;
 

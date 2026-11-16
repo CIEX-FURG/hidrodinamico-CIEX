@@ -116,7 +116,7 @@ export default function MapView({
             onSelecionar={selecionarEstacao}
           />
         )}
-
+        
         {mostrarVazao && (
           <LayerVazao
             selecionados={abertos("vazao")}
